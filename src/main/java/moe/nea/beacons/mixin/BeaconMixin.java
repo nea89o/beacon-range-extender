@@ -45,8 +45,9 @@ public class BeaconMixin implements BeaconBlockEntityExtra {
 		return this.checkingBeamSections;
 	}
 
-	@Inject(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/block/entity/BeaconBlockEntity;beamSections:Ljava/util/List;", opcode = Opcodes.ASTORE))
+	@Inject(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/block/entity/BeaconBlockEntity;beamSections:Ljava/util/List;", opcode = Opcodes.PUTFIELD))
 	private static void saveRangeExtender(Level level, BlockPos blockPos, BlockState blockState, BeaconBlockEntity beaconBlockEntity, CallbackInfo ci) {
+		if (level.isClientSide) return;
 		var extra = BeaconBlockEntityExtra.cast(beaconBlockEntity);
 		var accExtraRange = 0;
 		for (var beaconBeamSection : extra.getCheckingBeamSections_nea()) {
@@ -60,15 +61,14 @@ public class BeaconMixin implements BeaconBlockEntityExtra {
 	private static BlockPos checkForRangeExtender(
 			BlockPos oldBlockPos, Operation<BlockPos> original, @Local BeaconBlockEntity.BeaconBeamSection lastSection,
 			@Local(argsOnly = true) Level level) {
-		var newPos = original.call(oldBlockPos);
 		var blockState = level.getBlockState(oldBlockPos);
-		if (blockState.getBlock() instanceof BeaconRangeExtender extender && lastSection != null) {
+		if (!level.isClientSide && blockState.getBlock() instanceof BeaconRangeExtender extender && lastSection != null) {
 			var lastSectionExtra = BeaconBeamSectionExtra.cast(lastSection);
 			lastSectionExtra.setRangeExtenders_nea(
 					extender.extraBeaconRange_nea() + lastSectionExtra.getRangeExtenders_nea()
 			);
 		}
-		return newPos;
+		return original.call(oldBlockPos);
 	}
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/BeaconBlockEntity;applyEffects(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;ILnet/minecraft/core/Holder;Lnet/minecraft/core/Holder;)V"))
