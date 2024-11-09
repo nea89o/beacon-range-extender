@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "moe.nea.beacons.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BeaconBeamSectionMixin",
+    "BeaconMixin",
+    "SkullBlockRangeExtender"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

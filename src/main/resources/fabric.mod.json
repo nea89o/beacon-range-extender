@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"id": "beacon-range-increaser",
+	"version": "${version}",
+	"name": "Beacon Range Increaser",
+	"description": "Increases the range of beacons, if you place skulls in the path of the beam (32 for wither skulls, 5 blocks for other skulls).",
+	"authors": [
+		"Linnea Gräf"
+	],
+	"contact": {
+		"sources": "https://github.com/nea89o/beacon-range-extender"
+	},
+	"license": "MIT",
+	"icon": "assets/beacon-range-increaser/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"moe.nea.beacons.BeaconRangeIncreaser"
+		]
+	},
+	"mixins": [
+		"beacon-range-increaser.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.21",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
